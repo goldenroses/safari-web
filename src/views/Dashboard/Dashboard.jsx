@@ -88,11 +88,11 @@ class Dashboard extends React.Component {
     });
   };
 
-  getImage(path) {
-    FirebaseApp.storage().refFromURL(path).getDownloadURL().then((url) => {
-      this.setState({img: {uri: url}});
-    })
-  }
+  // getImage(path) {
+  //   FirebaseApp.storage().refFromURL(path).getDownloadURL().then((url) => {
+  //     this.setState({img: {uri: url}});
+  //   })
+  // }
 
   handleChangeIndex = index => {
     this.setState({ value: index });
