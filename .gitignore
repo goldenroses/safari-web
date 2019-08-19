@@ -7,6 +7,9 @@ LICENSE.md
 documentation
 package-lock.json
 .idea
+firebase.json
+.firebaserc
+.firebase
 # production
 /build
 # npmjs

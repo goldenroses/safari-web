@@ -27,12 +27,8 @@ import Table from "components/Table/Table.jsx";
 import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
-import { BrushSharp } from "@material-ui/icons";
-import Code from "@material-ui/core/SvgIcon/SvgIcon";
-import CustomTabs from "../../components/CustomTabs/CustomTabs";
-import Tasks from "../../components/Tasks/Tasks";
-import { website } from "../../variables/general";
 import progressBar from "assets/img/spinner.gif";
+import { HeartSpinner } from "react-spinners-kit";
 
 const styles = {
   cardCategoryWhite: {
@@ -70,7 +66,7 @@ class Categories extends React.Component {
     this.state = {
       progressIcon: progressBar,
       data: [],
-      isloaded: false
+      isLoaded: false
     };
   }
 
@@ -96,43 +92,17 @@ class Categories extends React.Component {
     ]);
 
     if (!isLoaded) {
-      return <div image={this.state.progressIcon} />;
+      return (
+        <div className={classes.centerDiv}>
+          <HeartSpinner size={100} color="#686769" />;
+        </div>
+      );
     }
 
     return (
       <GridContainer>
-        <GridItem xs={12} sm={12} md={10}>
-          <CustomTabs
-            title="Places:"
-            headerColor="success"
-            tabs={[
-              {
-                tabName: "Categories",
-                tabIcon: BrushSharp,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0]}
-                    tasksIndexes={[0, 1, 2, 3, 4]}
-                    tasks={categoryData}
-                  />
-                )
-              },
-              {
-                tabName: "Drafts",
-                tabIcon: Code,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[]}
-                    tasksIndexes={[0, 1]}
-                    tasks={website}
-                  />
-                )
-              }
-            ]}
-          />
-        </GridItem>
         <GridItem xs={12} sm={12} md={12}>
-          <Card plain>
+          <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Categories</h4>
               <p className={classes.cardCategoryWhite}>
@@ -147,11 +117,7 @@ class Categories extends React.Component {
                   "Category title",
                   "Category description"
                 ]}
-                tableData={[
-                  ["1", "Outdoors", "Outdoors and Forest"],
-                  ["2", "Club and Partying", "Go out and party"],
-                  ["3", "Nature", "Baileux"]
-                ]}
+                tableData={categoryData}
               />
             </CardBody>
           </Card>
