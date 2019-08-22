@@ -1,7 +1,7 @@
 {
-  "name": "safari webb app",
+  "name": "safari-web",
   "version": "1.7.0",
-  "description": "Material Dashboard React. Coded by Creative Tim",
+  "description": "Safari dashboard",
   "private": false,
   "main": "dist/index.js",
   "dependencies": {

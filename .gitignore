@@ -9,7 +9,7 @@ package-lock.json
 .idea
 firebase.json
 .firebaserc
-.firebase
+.firebase/*
 # production
 /build
 # npmjs

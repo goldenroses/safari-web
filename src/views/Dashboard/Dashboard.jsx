@@ -48,10 +48,6 @@ import Button from "../../components/CustomButtons/Button";
 import CardAvatar from "../../components/Card/CardAvatar";
 
 class Dashboard extends React.Component {
-  state = {
-    value: 0
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -60,13 +56,41 @@ class Dashboard extends React.Component {
       isLoaded: false,
       albumName: "",
       show: false,
-      placeItem: []
+      placeItem: [],
+      value: ""
     };
     this.handleChange = this.handleChange.bind(this);
+    this.updatePlace = this.updatePlace.bind(this);
   }
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  updatePlace() {
+    var currentPlaceItem = this.state.placeItem;
+    console.log(currentPlaceItem);
+
+    fetch("https://safari-app.herokuapp.com/place/" + currentPlaceItem.id, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        title: currentPlaceItem.title,
+        description: currentPlaceItem.description,
+        cardImage: currentPlaceItem.cardImage,
+        imageUrl: currentPlaceItem.imageUrl,
+        content: currentPlaceItem.content
+      })
+    });
+  }
+
+  handleChange = (event, type) => {
+    let x = event.target.value;
+    console.log("simple : " + x);
+    this.setState(() => {
+      let oldValue = Object.assign({}, this.state);
+      oldValue.placeItem[type] = x;
+      return { jasper: oldValue };
+    });
   };
 
   showModal = item => {
@@ -193,12 +217,16 @@ class Dashboard extends React.Component {
           </IconButton>
         </Tooltip>
       </TableCell>,
-      <div key="div">
-        <CardHeader key={"card"} color="warning" stats icon>
-          <CardIcon color="warning">
-            <Icon>content_copy</Icon>
-          </CardIcon>
-        </CardHeader>
+      <div>
+        <img
+          height={50}
+          alt={"loading.."}
+          src={
+            "https://safari-app.s3.us-west-2.amazonaws.com/" +
+            item.imageUrl +
+            "/card.jpeg"
+          }
+        />
       </div>,
       item.imageUrl,
       item.imageUrl === null
@@ -229,6 +257,9 @@ class Dashboard extends React.Component {
         </div>
       );
     }
+    if (imagesData == null) {
+      return <div className={classes.centerDiv}>Cannot fetch image data</div>;
+    }
 
     if (show) {
       return (
@@ -244,7 +275,7 @@ class Dashboard extends React.Component {
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={5}>
                       <CustomInput
-                        labelText="Id (disabled)"
+                        labelText={placeItem.id}
                         id="id-disabled"
                         formControlProps={{
                           fullWidth: true
@@ -256,8 +287,13 @@ class Dashboard extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3}>
                       <CustomInput
-                        labelText="Title"
-                        value={placeItem.title}
+                        labelText={placeItem.title}
+                        inputProps={{
+                          value: placeItem.title,
+                          placeholder: "Regular",
+                          onChange: e => this.handleChange(e, "title"),
+                          readOnly: false
+                        }}
                         id="title"
                         formControlProps={{
                           fullWidth: true
@@ -268,12 +304,13 @@ class Dashboard extends React.Component {
                       <CustomInput
                         labelText="Description"
                         id="description"
-                        value={placeItem.description}
                         formControlProps={{
                           fullWidth: true
                         }}
                         inputProps={{
                           multiline: true,
+                          value: placeItem.description,
+                          onChange: e => this.handleChange(e, "description"),
                           rows: 4
                         }}
                       />
@@ -282,12 +319,13 @@ class Dashboard extends React.Component {
                       <CustomInput
                         labelText="Content"
                         id="content"
-                        value={placeItem.content}
                         formControlProps={{
                           fullWidth: true
                         }}
                         inputProps={{
                           multiline: true,
+                          value: placeItem.content,
+                          onChange: e => this.handleChange(e, "content"),
                           rows: 7
                         }}
                       />
@@ -301,6 +339,10 @@ class Dashboard extends React.Component {
                         formControlProps={{
                           fullWidth: true
                         }}
+                        inputProps={{
+                          value: placeItem.imageUrl,
+                          onChange: e => this.handleChange(e, "imageUrl")
+                        }}
                       />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={6}>
@@ -310,13 +352,19 @@ class Dashboard extends React.Component {
                         formControlProps={{
                           fullWidth: true
                         }}
+                        inputProps={{
+                          value: placeItem.category,
+                          onChange: e => this.handleChange(e, "cateogory")
+                        }}
                       />
                     </GridItem>
                   </GridContainer>
                   <GridContainer></GridContainer>
                 </CardBody>
                 <CardFooter>
-                  <Button color="primary">Update Profile</Button>
+                  <Button color="primary" onClick={this.updatePlace}>
+                    Update Place
+                  </Button>
                   <IconButton
                     onClick={this.hideModal}
                     aria-label="Close"
@@ -340,21 +388,11 @@ class Dashboard extends React.Component {
                   </a>
                 </CardAvatar>
                 <CardBody profile>
-                  <h6 className={classes.cardCategory}>Masai Mara</h6>
-                  <h4 className={classes.cardTitle}>description goes here</h4>
-                  <p className={classes.description}>
-                    The Mara is an amazing place to visit. The wildlife is
-                    plentiful and there are many local tribes that are so
-                    awesome to see. One local nomadic tribe is the Masai. They
-                    are adorned in jewellery, wearing bright and colourful
-                    clothing and brightly coloured red blankets. Oftentimes you
-                    are actually able to see their homes from the inside,
-                    getting a real feel for what living in unison with nature is
-                    all about. /////
-                    {placeItem.title}
-                  </p>
+                  <h6 className={classes.cardCategory}>{placeItem.title}</h6>
+                  <h4 className={classes.cardTitle}>{placeItem.description}</h4>
+                  <p className={classes.description}>{placeItem.content}</p>
                   <Button color="primary" round>
-                    Follow
+                    Preview
                   </Button>
                 </CardBody>
               </Card>
