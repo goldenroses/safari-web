@@ -26,12 +26,8 @@ const dashboardStyle = {
   centerDiv: {
     display: "inline-block",
     position: "absolute",
-    top: "40%",
-    left: "50%",
-    marginTop: "40%" /*set to a negative number 1/2 of your height*/,
-    marginLeft: "50%" /*set to a negative number 1/2 of your width*/,
-    border: "1px solid #ccc",
-    backgroundColor: "#f3f3f3"
+    marginTop: "15%" /*set to a negative number 1/2 of your height*/,
+    marginLeft: "40%" /*set to a negative number 1/2 of your width*/,
   },
   successText: {
     color: successColor[0]

@@ -45,7 +45,7 @@ const styles = {
     marginTop: "15%" /*set to a negative number 1/2 of your height*/,
     marginLeft: "40%" /*set to a negative number 1/2 of your width*/
   },
-  cardCategoryWhite: {
+  cardAgentWhite: {
     "&,& a,& a:hover,& a:focus": {
       color: "rgba(255,255,255,.62)",
       margin: "0",
@@ -74,15 +74,15 @@ const styles = {
   }
 };
 
-class Categories extends React.Component {
+class Agents extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       progressIcon: progressBar,
       data: [],
       isLoaded: false,
-      categoryItem: [],
-      newcategoryItem: [],
+      agentItem: [],
+      newagentItem: [],
       show: false
     };
   }
@@ -91,7 +91,7 @@ class Categories extends React.Component {
     let x = event.target.value;
     this.setState(() => {
       let oldValue = Object.assign({}, this.state);
-      oldValue.categoryItem[type] = x;
+      oldValue.agentItem[type] = x;
       return { ok: oldValue };
     });
   };
@@ -102,32 +102,32 @@ class Categories extends React.Component {
       this.setState({ newItem: true });
     } else {
       this.setState({ show: true });
-      this.setState({ categoryItem: item });
+      this.setState({ agentItem: item });
     }
   };
 
-  createNewCategory() {
-    var currentCategoryItem = this.state.newcategoryItem;
+  createNewAgent() {
+    var currentAgentItem = this.state.newagentItem;
 
     // eslint-disable-next-line react/prop-types
-    this.setState({ currentCategoryId: this.state.selectedValue });
+    this.setState({ currentAgentId: this.state.selectedValue });
     console.log("---selectedValue : ----->" + this.state.selectedValue);
 
     //
     // var array = [];
-    // var category = JSON.parse(
-    //   (array["category_id"] = this.state.selectedValue)
+    // var agent = JSON.parse(
+    //   (array["agent_id"] = this.state.selectedValue)
     // );
 
-    fetch("https://safari-app.herokuapp.com/category", {
+    fetch("https://safari-app.herokuapp.com/agent", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        title: currentCategoryItem.title,
-        description: currentCategoryItem.description
+        title: currentAgentItem.title,
+        description: currentAgentItem.description
       })
     });
 
@@ -140,7 +140,7 @@ class Categories extends React.Component {
   };
 
   componentDidMount() {
-    fetch("https://safari-app.herokuapp.com/category")
+    fetch("https://safari-app.herokuapp.com/agent")
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -158,10 +158,10 @@ class Categories extends React.Component {
       data,
       show,
       newItem,
-      categoryItem,
-      newcategoryItem
+      agentItem,
+      newagentItem
     } = this.state;
-    var categoryData = data.map(item => [
+    var agentData = data.map(item => [
       item.id,
       item.title,
       item.description,
@@ -201,13 +201,13 @@ class Categories extends React.Component {
               <Card>
                 <CardHeader color="primary">
                   <h4 className={classes.cardTitleWhite}>Edit Place</h4>
-                  <p className={classes.cardCategoryWhite}>Edit {}</p>
+                  <p className={classes.cardAgentWhite}>Edit {}</p>
                 </CardHeader>
                 <CardBody>
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={5}>
                       <CustomInput
-                        labelText={categoryItem.id}
+                        labelText={agentItem.id}
                         id="id-disabled"
                         formControlProps={{
                           fullWidth: true
@@ -219,9 +219,9 @@ class Categories extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3}>
                       <CustomInput
-                        labelText={categoryItem.title}
+                        labelText={agentItem.title}
                         inputProps={{
-                          value: categoryItem.title,
+                          value: agentItem.title,
                           placeholder: "Regular",
                           onChange: e => this.handleChange(e, "title"),
                           readOnly: false
@@ -241,7 +241,7 @@ class Categories extends React.Component {
                         }}
                         inputProps={{
                           multiline: true,
-                          value: categoryItem.description,
+                          value: agentItem.description,
                           onChange: e => this.handleChange(e, "description"),
                           rows: 4
                         }}
@@ -254,8 +254,8 @@ class Categories extends React.Component {
                   <GridContainer></GridContainer>
                 </CardBody>
                 <CardFooter>
-                  <Button color="primary" onClick={() => this.updateCategory()}>
-                    Update Category
+                  <Button color="primary" onClick={() => this.updateAgent()}>
+                    Update Agent
                   </Button>
                   <IconButton
                     onClick={this.hideModal}
@@ -280,11 +280,11 @@ class Categories extends React.Component {
                   </a>
                 </CardAvatar>
                 <CardBody profile>
-                  <h6 className={classes.cardCategory}>{categoryItem.title}</h6>
+                  <h6 className={classes.cardAgent}>{agentItem.title}</h6>
                   <h4 className={classes.cardTitle}>
-                    {categoryItem.description}
+                    {agentItem.description}
                   </h4>
-                  <p className={classes.description}>{categoryItem.content}</p>
+                  <p className={classes.description}>{agentItem.content}</p>
                   <Button color="primary" round>
                     Preview
                   </Button>
@@ -302,8 +302,8 @@ class Categories extends React.Component {
             <GridItem xs={12} sm={12} md={8}>
               <Card>
                 <CardHeader color="primary">
-                  <h4 className={classes.cardTitleWhite}>Edit Category</h4>
-                  <p className={classes.cardCategoryWhite}>Edit {}</p>
+                  <h4 className={classes.cardTitleWhite}>Edit Agent</h4>
+                  <p className={classes.cardAgentWhite}>Edit {}</p>
                 </CardHeader>
                 <CardBody>
                   <GridContainer>
@@ -323,7 +323,7 @@ class Categories extends React.Component {
                       <CustomInput
                         labelText="Title"
                         inputProps={{
-                          value: newcategoryItem.title,
+                          value: newagentItem.title,
                           placeholder: "Regular",
                           onChange: e => this.handleNewChange(e, "title"),
                           readOnly: false
@@ -343,7 +343,7 @@ class Categories extends React.Component {
                         }}
                         inputProps={{
                           multiline: true,
-                          value: newcategoryItem.desc,
+                          value: newagentItem.desc,
                           onChange: e => this.handleNewChange(e, "description"),
                           rows: 4
                         }}
@@ -358,7 +358,7 @@ class Categories extends React.Component {
                         }}
                         inputProps={{
                           multiline: true,
-                          value: newcategoryItem.content,
+                          value: newagentItem.content,
                           onChange: e => this.handleNewChange(e, "content"),
                           rows: 7
                         }}
@@ -374,7 +374,7 @@ class Categories extends React.Component {
                           fullWidth: true
                         }}
                         inputProps={{
-                          value: newcategoryItem.imageUrl,
+                          value: newagentItem.imageUrl,
                           onChange: e => this.handleNewChange(e, "imageUrl")
                         }}
                       />
@@ -387,7 +387,7 @@ class Categories extends React.Component {
                           fullWidth: true
                         }}
                         inputProps={{
-                          value: newcategoryItem.cardImage,
+                          value: newagentItem.cardImage,
                           onChange: e => this.handleNewChange(e, "cardImage")
                         }}
                       />
@@ -425,14 +425,14 @@ class Categories extends React.Component {
                   </a>
                 </CardAvatar>
                 <CardBody profile>
-                  <h6 className={classes.cardCategory}>
-                    {newcategoryItem.title}
+                  <h6 className={classes.cardAgent}>
+                    {newagentItem.title}
                   </h6>
                   <h4 className={classes.cardTitle}>
-                    {newcategoryItem.description}
+                    {newagentItem.description}
                   </h4>
                   <p className={classes.description}>
-                    {newcategoryItem.content}
+                    {newagentItem.content}
                   </p>
                   <Button color="primary" round>
                     Preview
@@ -451,22 +451,22 @@ class Categories extends React.Component {
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Categories</h4>
-              <p className={classes.cardCategoryWhite}>
+              <p className={classes.cardAgentWhite}>
                 All present places categories
               </p>
             </CardHeader>
             <CardBody>
-              <Button color="primary" onClick={() => this.createNewCategory()}>
-                Add new Category
+              <Button color="primary" onClick={() => this.createNewAgent()}>
+                Add new Agent
               </Button>
               <Table
                 tableHeaderColor="primary"
                 tableHead={[
-                  "Category Id",
-                  "Category title",
-                  "Category description"
+                  "Agent Id",
+                  "Agent title",
+                  "Agent description"
                 ]}
-                tableData={categoryData}
+                tableData={agentData}
               />
             </CardBody>
           </Card>
@@ -476,8 +476,8 @@ class Categories extends React.Component {
   }
 }
 
-Categories.propTypes = {
+Agents.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Categories);
+export default withStyles(styles)(Agents);

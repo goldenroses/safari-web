@@ -134,7 +134,26 @@ function EditPlace(props) {
                 </GridItem>
               </GridContainer>
               <GridContainer>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="Card Image"
+                    id="cardImage"
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="Category"
+                    id="category"
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
               </GridContainer>
+              <GridContainer></GridContainer>
             </CardBody>
             <CardFooter>
               <Button color="primary">Update Profile</Button>
@@ -149,11 +168,18 @@ function EditPlace(props) {
               </a>
             </CardAvatar>
             <CardBody profile>
-              <h6 className={classes.cardCategory}>Masai Mara</h6>
+              <h6 className={classes.cardCategory}>{}</h6>
               <h4 className={classes.cardTitle}>description goes here</h4>
               <p className={classes.description}>
-                The Mara is an amazing place to visit. The wildlife is plentiful and there are many local tribes that are so awesome to see. One local nomadic tribe is the Masai. They are adorned in jewellery, wearing bright and colourful clothing and brightly coloured red blankets. Oftentimes you are actually able to see their homes from the inside, getting a real feel for what living in unison with nature is all about.
+                The Mara is an amazing place to visit. The wildlife is plentiful
+                and there are many local tribes that are so awesome to see. One
+                local nomadic tribe is the Masai. They are adorned in jewellery,
+                wearing bright and colourful clothing and brightly coloured red
+                blankets. Oftentimes you are actually able to see their homes
+                from the inside, getting a real feel for what living in unison
+                with nature is all about.
               </p>
+              <h4 className={classes.cardTitle}>description goes here</h4>
               <Button color="primary" round>
                 Follow
               </Button>

@@ -46,6 +46,8 @@ import TableCell from "@material-ui/core/TableCell";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import Button from "../../components/CustomButtons/Button";
 import CardAvatar from "../../components/Card/CardAvatar";
+import Dropdown from "../Dropdown/Dropdown.jsx";
+import Link from "@material-ui/core/Link";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -54,21 +56,40 @@ class Dashboard extends React.Component {
       placesData: [],
       imagesData: [],
       isLoaded: false,
+      selectedValue: 0,
       albumName: "",
-      show: false,
+      category: 0,
+      newItem: false,
+      open: false,
       placeItem: [],
+      newPlaceItem: [],
+      show: false,
+      categoryId: 0,
       value: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.updatePlace = this.updatePlace.bind(this);
   }
 
+  handleToggle = () => {
+    this.setState(state => ({ open: !state.open }));
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
   updatePlace() {
     var currentPlaceItem = this.state.placeItem;
-    console.log(currentPlaceItem);
+    if (!currentPlaceItem) {
+      console.log("There's no item!!" + this.state.selectedValue);
+    }
+    // eslint-disable-next-line react/prop-types
+    this.setState({ currentCategoryId: this.state.selectedValue });
+    console.log("----#######---->" + this.state.selectedValue);
 
     fetch("https://safari-app.herokuapp.com/place/" + currentPlaceItem.id, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -78,24 +99,87 @@ class Dashboard extends React.Component {
         description: currentPlaceItem.description,
         cardImage: currentPlaceItem.cardImage,
         imageUrl: currentPlaceItem.imageUrl,
-        content: currentPlaceItem.content
+        content: currentPlaceItem.content,
+        category_id: this.state.selectedValue
       })
     });
+
+    //hide modal
+    this.hideModal();
   }
+  createNewPlace() {
+    var currentPlaceItem = this.state.newPlaceItem;
+
+    // eslint-disable-next-line react/prop-types
+    this.setState({ currentCategoryId: this.state.selectedValue });
+    console.log("---selectedValue : ----->" + this.state.selectedValue);
+
+    //
+    // var array = [];
+    // var category = JSON.parse(
+    //   (array["category_id"] = this.state.selectedValue)
+    // );
+
+    fetch("https://safari-app.herokuapp.com/place", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        title: currentPlaceItem.title,
+        description: currentPlaceItem.description,
+        cardImage: currentPlaceItem.cardImage,
+        imageUrl: currentPlaceItem.imageUrl,
+        content: currentPlaceItem.content,
+        category: this.state.selectedValue
+      })
+    });
+
+    //hide modal
+    this.hideModal();
+  }
+
+  selectedValue = newValue => {
+    console.log("Setting new value" + newValue);
+    this.setState({
+      selectedValue: newValue
+    });
+  };
+
+  sendData = newValue => {
+    console.log("Setting new value" + newValue);
+    this.setState({
+      selectedValue: newValue
+    });
+  };
 
   handleChange = (event, type) => {
     let x = event.target.value;
-    console.log("simple : " + x);
     this.setState(() => {
       let oldValue = Object.assign({}, this.state);
       oldValue.placeItem[type] = x;
-      return { jasper: oldValue };
+      return { ok: oldValue };
+    });
+  };
+
+  handleNewChange = (event, type) => {
+    let x = event.target.value;
+    this.setState(() => {
+      let oldValue = Object.assign({}, this.state);
+      oldValue.newPlaceItem[type] = x;
+      return { ok: oldValue };
     });
   };
 
   showModal = item => {
-    this.setState({ show: true });
-    this.setState({ placeItem: item });
+    if (!item) {
+      this.setState({ show: true });
+      this.setState({ newItem: true });
+    } else {
+      this.setState({ show: true });
+      this.setState({ placeItem: item });
+    }
   };
 
   hideModal = () => {
@@ -129,64 +213,35 @@ class Dashboard extends React.Component {
     });
   };
 
+  mapCat = category =>
+    category.map(function(item) {
+      console.log("received cat : " + category);
+      return {
+        key: item.id,
+        label: item.name
+      };
+    });
+
   render() {
     const { classes } = this.props;
-    var { isLoaded, placesData, imagesData, show, placeItem } = this.state;
-
-    var imagesResponse = imagesData.map(item => [
-      item.key === null ? (
-        "No Image Uploaded"
-      ) : item.key.match(item.imageUrl) == null ? (
-        <div style={{ display: "none" }}>
-          <h6>Not</h6>
-        </div>
-      ) : (
-        <div>
-          <img
-            height={50}
-            alt={"loading.."}
-            src={"https://safari-app.s3.us-west-2.amazonaws.com/" + item.key}
-          />
-        </div>
-      ),
-      item.key.match("Samburu"),
-      item.key,
-      item.imageUrl,
-      item.storageClass,
-      <TableCell key="images" className={classes.tableActions}>
-        <Tooltip
-          id="tooltip-top"
-          title="Edit Task"
-          placement="top"
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <IconButton aria-label="Edit" className={classes.tableActionButton}>
-            <Edit
-              className={classes.tableActionButtonIcon + " " + classes.edit}
-            />
-          </IconButton>
-        </Tooltip>
-        <Tooltip
-          id="tooltip-top-start"
-          title="Remove"
-          placement="top"
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <IconButton aria-label="Close" className={classes.tableActionButton}>
-            <Close
-              className={classes.tableActionButtonIcon + " " + classes.close}
-            />
-          </IconButton>
-        </Tooltip>
-      </TableCell>
-    ]);
-
+    var {
+      isLoaded,
+      placesData,
+      imagesData,
+      show,
+      newItem,
+      placeItem,
+      newPlaceItem
+    } = this.state;
+    console.log("<---***-->\n" + newPlaceItem);
     var tableData = placesData.map(item => [
       item.id,
       item.title,
       item.description,
       item.content,
-      <TableCell key="images" className={classes.tableActions}>
+      item.cardImage,
+      Object.values(item.category)[1],
+      <TableCell className={classes.tableActions}>
         <Tooltip
           id="tooltip-top"
           title="Edit Task"
@@ -217,7 +272,8 @@ class Dashboard extends React.Component {
           </IconButton>
         </Tooltip>
       </TableCell>,
-      <div>
+      // eslint-disable-next-line react/jsx-key
+      <div id="image">
         <img
           height={50}
           alt={"loading.."}
@@ -247,13 +303,15 @@ class Dashboard extends React.Component {
                 />
               </div>
             )
-          ])
+          ]),
+      // eslint-disable-next-line react/jsx-key
+      <Link to="/categories">Click</Link>
     ]);
 
     if (!isLoaded) {
       return (
         <div className={classes.centerDiv}>
-          <HeartSpinner size={100} color="#686769" />;
+          <HeartSpinner size={100} color="#c21e56" />;
         </div>
       );
     }
@@ -261,7 +319,7 @@ class Dashboard extends React.Component {
       return <div className={classes.centerDiv}>Cannot fetch image data</div>;
     }
 
-    if (show) {
+    if (show && !newItem) {
       return (
         <div>
           <GridContainer>
@@ -347,22 +405,28 @@ class Dashboard extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={12} md={6}>
                       <CustomInput
-                        labelText="Category"
-                        id="category"
+                        labelText="Card Image"
+                        id="cardImage"
                         formControlProps={{
                           fullWidth: true
                         }}
                         inputProps={{
-                          value: placeItem.category,
-                          onChange: e => this.handleChange(e, "cateogory")
+                          value: placeItem.cardImage,
+                          onChange: e => this.handleChange(e, "cardImage")
                         }}
                       />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={6}>
+                      <Dropdown
+                        sendData={this.sendData}
+                        selectedValue={placeItem.category.id}
+                      ></Dropdown>
                     </GridItem>
                   </GridContainer>
                   <GridContainer></GridContainer>
                 </CardBody>
                 <CardFooter>
-                  <Button color="primary" onClick={this.updatePlace}>
+                  <Button color="primary" onClick={() => this.updatePlace()}>
                     Update Place
                   </Button>
                   <IconButton
@@ -401,6 +465,151 @@ class Dashboard extends React.Component {
         </div>
       );
     }
+    if (show && newItem) {
+      return (
+        <div>
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={8}>
+              <Card>
+                <CardHeader color="primary">
+                  <h4 className={classes.cardTitleWhite}>Edit Place</h4>
+                  <p className={classes.cardCategoryWhite}>Edit {}</p>
+                </CardHeader>
+                <CardBody>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={5}>
+                      <CustomInput
+                        labelText="Id"
+                        id="id-disabled"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                        inputProps={{
+                          disabled: true
+                        }}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={3}>
+                      <CustomInput
+                        labelText="Title"
+                        inputProps={{
+                          value: newPlaceItem.title,
+                          placeholder: "Regular",
+                          onChange: e => this.handleNewChange(e, "title"),
+                          readOnly: false
+                        }}
+                        id="title"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={8}>
+                      <CustomInput
+                        labelText="Description"
+                        id="description"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                        inputProps={{
+                          multiline: true,
+                          value: newPlaceItem.desc,
+                          onChange: e => this.handleNewChange(e, "description"),
+                          rows: 4
+                        }}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={8}>
+                      <CustomInput
+                        labelText="Content"
+                        id="content"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                        inputProps={{
+                          multiline: true,
+                          value: newPlaceItem.content,
+                          onChange: e => this.handleNewChange(e, "content"),
+                          rows: 7
+                        }}
+                      />
+                    </GridItem>
+                  </GridContainer>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={6}>
+                      <CustomInput
+                        labelText="Image URL"
+                        id="first-name"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                        inputProps={{
+                          value: newPlaceItem.imageUrl,
+                          onChange: e => this.handleNewChange(e, "imageUrl")
+                        }}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={6}>
+                      <CustomInput
+                        labelText="Card Image"
+                        id="cardImage"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                        inputProps={{
+                          value: newPlaceItem.cardImage,
+                          onChange: e => this.handleNewChange(e, "cardImage")
+                        }}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={6}>
+                      <Dropdown sendData={this.sendData}></Dropdown>
+                    </GridItem>
+                  </GridContainer>
+                  <GridContainer></GridContainer>
+                </CardBody>
+                <CardFooter>
+                  <Button color="primary" onClick={() => this.createNewPlace()}>
+                    Add new Place
+                  </Button>
+                  <IconButton
+                    onClick={this.hideModal}
+                    aria-label="Close"
+                    className={classes.tableActionButton}
+                  >
+                    <Close
+                      className={
+                        classes.tableActionButtonIcon + " " + classes.close
+                      }
+                    />
+                  </IconButton>
+                </CardFooter>
+              </Card>
+            </GridItem>
+            <GridItem xs={12} sm={12} md={4}>
+              <Card profile>
+                <CardAvatar profile>
+                  <a href="#pablo" onClick={e => e.preventDefault()}>
+                    {/* eslint-disable-next-line no-undef */}
+                    <img src={BrushSharp} alt="..." />
+                  </a>
+                </CardAvatar>
+                <CardBody profile>
+                  <h6 className={classes.cardCategory}>{newPlaceItem.title}</h6>
+                  <h4 className={classes.cardTitle}>
+                    {newPlaceItem.description}
+                  </h4>
+                  <p className={classes.description}>{newPlaceItem.content}</p>
+                  <Button color="primary" round>
+                    Preview
+                  </Button>
+                </CardBody>
+              </Card>
+            </GridItem>
+          </GridContainer>
+        </div>
+      );
+    }
 
     return (
       <div>
@@ -413,7 +622,7 @@ class Dashboard extends React.Component {
                 </CardIcon>
                 <p className={classes.cardCategory}>Places</p>
                 <h3 className={classes.cardTitle}>
-                  29 <small>Places</small>
+                  {placesData.length} <small>Places</small>
                 </h3>
               </CardHeader>
               <CardFooter stats>
@@ -473,39 +682,24 @@ class Dashboard extends React.Component {
                 </p>
               </CardHeader>
               <CardBody>
+                <Button onClick={() => this.showModal()} color="warning" round>
+                  New Place
+                </Button>
                 <Table
                   tableHeaderColor="primary"
                   tableHead={[
-                    "Category Id",
+                    "Place Id",
                     "Place title",
                     "Place description",
                     "Content",
+                    "Card Image",
+                    "Category",
                     "Actions",
                     "Card Image",
                     "Bucket Name",
                     "Image URLs"
                   ]}
                   tableData={tableData}
-                />
-              </CardBody>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={12} md={12}>
-            <Card plain>
-              <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Places</h4>
-                <p className={classes.cardCategoryWhite}>All Images</p>
-              </CardHeader>
-              <CardBody>
-                <Table
-                  tableHeaderColor="primary"
-                  tableHead={[
-                    "Image Id",
-                    "Image description",
-                    "Card Image",
-                    "Image URLs"
-                  ]}
-                  tableData={imagesResponse}
                 />
               </CardBody>
             </Card>

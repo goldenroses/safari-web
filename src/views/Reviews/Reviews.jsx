@@ -74,7 +74,7 @@ const styles = {
   }
 };
 
-class Categories extends React.Component {
+class Reviews extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -106,41 +106,13 @@ class Categories extends React.Component {
     }
   };
 
-  createNewCategory() {
-    var currentCategoryItem = this.state.newcategoryItem;
-
-    // eslint-disable-next-line react/prop-types
-    this.setState({ currentCategoryId: this.state.selectedValue });
-    console.log("---selectedValue : ----->" + this.state.selectedValue);
-
-    //
-    // var array = [];
-    // var category = JSON.parse(
-    //   (array["category_id"] = this.state.selectedValue)
-    // );
-
-    fetch("https://safari-app.herokuapp.com/category", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        title: currentCategoryItem.title,
-        description: currentCategoryItem.description
-      })
-    });
-
-    //hide modal
-    this.hideModal();
-  }
 
   hideModal = () => {
     this.setState({ show: false });
   };
 
   componentDidMount() {
-    fetch("https://safari-app.herokuapp.com/category")
+    fetch("https://safari-app.herokuapp.com/reviews")
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -476,8 +448,8 @@ class Categories extends React.Component {
   }
 }
 
-Categories.propTypes = {
+Reviews.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Categories);
+export default withStyles(styles)(Reviews);

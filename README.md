@@ -98,7 +98,7 @@ material-dashboard-react
         ├── Dashboard
         │   └── Dashboard.jsx
         ├── Icons
-        │   └── Icons.jsx
+        │   └── Dropdown.jsx
         ├── Maps
         │   └── Maps.jsx
         ├── Notifications
