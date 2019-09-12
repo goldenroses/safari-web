@@ -23,6 +23,12 @@ import {
 } from "assets/jss/material-dashboard-react.jsx";
 
 const dashboardStyle = {
+  centerDiv: {
+    display: "inline-block",
+    position: "absolute",
+    marginTop: "15%" /*set to a negative number 1/2 of your height*/,
+    marginLeft: "40%" /*set to a negative number 1/2 of your width*/,
+  },
   successText: {
     color: successColor[0]
   },

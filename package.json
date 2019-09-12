@@ -1,12 +1,13 @@
 {
-  "name": "material-dashboard-react",
+  "name": "safari-web",
   "version": "1.7.0",
-  "description": "Material Dashboard React. Coded by Creative Tim",
+  "description": "Safari dashboard",
   "private": false,
   "main": "dist/index.js",
   "dependencies": {
     "@material-ui/core": "4.1.0",
     "@material-ui/icons": "4.1.0",
+    "aws-sdk": "^2.512.0",
     "chartist": "0.10.1",
     "classnames": "2.2.6",
     "firebase": "^6.4.0",
@@ -19,24 +20,27 @@
     "react-google-maps": "9.4.5",
     "react-router-dom": "5.0.1",
     "react-scripts": "3.0.1",
-    "react-swipeable-views": "0.13.3"
+    "react-spinners-kit": "^1.9.0",
+    "react-swipeable-views": "0.13.3",
+    "styled-components": "^4.3.2"
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "NODE_PATH=./src react-scripts start"
+    "deploy": "firebase deploy",
+    "build": "react-scripts build",
+    "start": "react-scripts start"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/material-dashboard-react.git"
+    "url": "git+https://github.com/{}"
   },
   "keywords": [],
-  "author": "Creative Tim <hello@creative-tim.com> (https://www.creative-tim.com/)",
+  "author": "Nyenjes",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/material-dashboard-react/issues"
+    "url": "https://safari-web.firebaseapp.com/bugs"
   },
-  "homepage": "https://creativetimofficial.github.io/material-dashboard-react/#/dashboard",
+  "homepage": "https://safari-web.firebaseapp.com/",
   "optionalDependencies": {
     "@types/googlemaps": "3.36.4",
     "@types/markerclustererplus": "2.1.33",
