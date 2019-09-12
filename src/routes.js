@@ -42,13 +42,13 @@ const dashboardRoutes = [
     component: DashboardPage,
     layout: "/admin"
   },
-  {
-    path: "/edit_place",
-    name: "Edit Place",
-    icon: Edit,
-    component: EditPlace,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/edit_place",
+  //   name: "Edit Place",
+  //   icon: Edit,
+  //   component: EditPlace,
+  //   layout: "/admin"
+  // },
   {
     path: "/agents",
     name: "Agents",
