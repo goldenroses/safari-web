@@ -29,8 +29,7 @@ import Typography from "views/Typography/Typography.jsx";
 import NotificationsPage from "views/Notifications/Notifications.jsx";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.jsx";
 // core components/views for RTL layout
-import {Category, Edit, FaceRounded} from "@material-ui/icons";
-import EditPlace from "./views/EditPlace/EditPlace";
+import {FaceRounded} from "@material-ui/icons";
 import Categories from "./views/Categories/Categories";
 import Agents from "./views/Agents/Agents";
 
